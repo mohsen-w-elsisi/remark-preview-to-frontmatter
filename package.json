@@ -13,6 +13,7 @@
   "dependencies": {
     "remark": "^15.0.1",
     "remark-frontmatter": "^5.0.0",
+    "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0"
   }
 }

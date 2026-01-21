@@ -3,6 +3,7 @@
  */
 
 import { visit } from "unist-util-visit";
+import { u } from "unist-builder";
 
 /**
  * Extract a text preview from a markdown and add it to the frontmatter.
@@ -40,9 +41,18 @@ export default function remarkTextPreview() {
 
     previewText = previewText + "...";
 
+    let frontmatterNodeExists = false;
+
     visit(tree, "yaml", (node) => {
+      frontmatterNodeExists = true;
       node.value = addYamlProperty(node.value, frontmatterKey, previewText);
     });
+
+    if (!frontmatterNodeExists) {
+      const yamlContent = `${frontmatterKey}: ${previewText}`;
+      const yamlNode = u("yaml", yamlContent);
+      tree.children.unshift(yamlNode);
+    }
   };
 }
 
