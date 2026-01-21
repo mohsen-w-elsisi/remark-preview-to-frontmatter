@@ -6,13 +6,26 @@ import { visit } from "unist-util-visit";
 import { u } from "unist-builder";
 
 /**
+ * @typedef {Object} PluginOptions
+ * @property {number} charLimit - Maximum number of characters for the preview.
+ * @property {string} frontmatterKey - Key to use in the frontmatter for the preview text.
+ */
+
+/**
  * Extract a text preview from a markdown and add it to the frontmatter.
+ *
+ * @param {PluginOptions} [options]
  *
  * @returns Transform.
  */
-export default function remarkTextPreview() {
-  const charLimit = 200;
-  const frontmatterKey = "preview";
+export default function remarkTextPreview(
+  options = {
+    charLimit: 200,
+    frontmatterKey: "preview",
+  },
+) {
+  const { charLimit, frontmatterKey } = options;
+
   const forbiddenTypes = new Set(["yaml", "html"]);
 
   /**
