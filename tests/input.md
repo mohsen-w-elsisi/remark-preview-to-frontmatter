@@ -26,7 +26,7 @@ Conversion notes:
 ----->
 
 
-In a previous post, I talked about a project i was working on called tic tac done, and i briefly mentioned how if I had focused on only one key feature it might have not failed. In this post, I’ll dive deeper into the benifits of having apps that **do one thing and do it very well.**
+In a previous post, I talked about a project i was working on called: tic tac done, and i briefly mentioned how if I had focused on only one key feature it might have not failed. In this post, I’ll dive deeper into the benifits of having apps that **do one thing and do it very well.**
 
 
 ## Easy to develop and maintain

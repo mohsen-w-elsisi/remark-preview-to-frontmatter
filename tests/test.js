@@ -7,7 +7,7 @@ const doc = await fs.readFile("tests/input.md");
 
 const file = await remark()
   .use(remarkFrontmatter)
-  .use(remarkTextPreview, { frontmatterKey: "summary" })
+  .use(remarkTextPreview, { charLimit: 350 })
   .process(doc);
 
 await fs.writeFile("tests/output.md", String(file));

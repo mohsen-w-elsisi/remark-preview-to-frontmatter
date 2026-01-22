@@ -1,6 +1,7 @@
 import type { Root } from "mdast";
 import { visit } from "unist-util-visit";
 import { u } from "unist-builder";
+import * as yaml from "yaml";
 
 interface PluginOptions {
   charLimit?: number;
@@ -55,14 +56,13 @@ function remarkTextPreview(options: PluginOptions = {}): (tree: Root) => void {
 }
 
 function addYamlProperty(
-  yaml: string,
+  yamlString: string,
   frontmatterKey: string,
   previewText: string,
 ) {
-  const lines = yaml.split("\n");
-  lines.push(`${frontmatterKey}: ${previewText}`);
-  const newYaml = lines.join("\n");
-  return newYaml;
+  const parsedYaml = yaml.parse(yamlString);
+  parsedYaml[frontmatterKey] = previewText;
+  return yaml.stringify(parsedYaml);
 }
 
 export default remarkTextPreview;
