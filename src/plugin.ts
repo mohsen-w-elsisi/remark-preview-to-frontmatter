@@ -1,68 +1,52 @@
 import type { Root } from "mdast";
-import { visit } from "unist-util-visit";
-import { u } from "unist-builder";
-import * as yaml from "yaml";
+import modifyFrontmatter from "./frontmatter.js";
+import trimPreviewTextToLength, {
+  TrailingWordBreakPolicy,
+} from "./wordBreaks.js";
+import extractPreviewText from "./extractPreviewText.js";
 
 interface PluginOptions {
   charLimit?: number;
+  trailingWordBreakPolicy?: TrailingWordBreakPolicy;
   frontmatterKey?: string;
+  allowMultipleLines?: boolean;
+  appendEllipsis?: boolean;
 }
 
 const defaultOptions: PluginOptions = {
   charLimit: 200,
+  trailingWordBreakPolicy: "full word",
   frontmatterKey: "preview",
+  allowMultipleLines: false,
+  appendEllipsis: true,
 } as const;
 
 function remarkTextPreview(options: PluginOptions = {}): (tree: Root) => void {
   const {
     charLimit = defaultOptions.charLimit as number,
+    trailingWordBreakPolicy = defaultOptions.trailingWordBreakPolicy as TrailingWordBreakPolicy,
     frontmatterKey = defaultOptions.frontmatterKey as string,
+    allowMultipleLines = defaultOptions.allowMultipleLines as boolean,
+    appendEllipsis = defaultOptions.appendEllipsis as boolean,
   } = options;
 
   return function (tree) {
-    let previewText = "";
+    let previewText = extractPreviewText(tree, charLimit);
 
-    visit(tree, "text", (node) => {
-      if (previewText.length >= charLimit) return;
-
-      if (node.value) {
-        previewText += node.value + " ";
-      }
-    });
-
-    previewText = previewText.replace("\n", " ");
+    if (!allowMultipleLines) previewText = previewText.replace("\n", " ");
 
     previewText = previewText.trim();
 
-    if (previewText.length > charLimit) {
-      previewText = previewText.slice(0, charLimit);
-    }
+    previewText = trimPreviewTextToLength(
+      previewText,
+      charLimit,
+      trailingWordBreakPolicy,
+    );
 
-    previewText = previewText + "...";
+    if (appendEllipsis) previewText = previewText + "...";
 
-    let frontmatterNodeExists = false;
-
-    visit(tree, "yaml", (node) => {
-      frontmatterNodeExists = true;
-      node.value = addYamlProperty(node.value, frontmatterKey, previewText);
-    });
-
-    if (!frontmatterNodeExists) {
-      const yamlContent = `${frontmatterKey}: ${previewText}`;
-      const yamlNode = u("yaml", yamlContent);
-      tree.children.unshift(yamlNode);
-    }
+    modifyFrontmatter(tree, frontmatterKey, previewText);
   };
-}
-
-function addYamlProperty(
-  yamlString: string,
-  frontmatterKey: string,
-  previewText: string,
-) {
-  const parsedYaml = yaml.parse(yamlString);
-  parsedYaml[frontmatterKey] = previewText;
-  return yaml.stringify(parsedYaml);
 }
 
 export default remarkTextPreview;
