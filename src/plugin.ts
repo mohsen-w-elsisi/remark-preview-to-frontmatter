@@ -1,43 +1,28 @@
-/**
- * @import {Root} from 'mdast'
- */
-
+import type { Root } from "mdast";
 import { visit } from "unist-util-visit";
 import { u } from "unist-builder";
 
-/**
- * @typedef {Object} PluginOptions
- * @property {number} charLimit - Maximum number of characters for the preview.
- * @property {string} frontmatterKey - Key to use in the frontmatter for the preview text.
- */
+interface PluginOptions {
+  charLimit?: number;
+  frontmatterKey?: string;
+}
 
-/**
- * Extract a text preview from a markdown and add it to the frontmatter.
- *
- * @param {PluginOptions} [options]
- *
- * @returns Transform.
- */
-export default function remarkTextPreview(
-  options = {
-    charLimit: 200,
-    frontmatterKey: "preview",
-  },
-) {
-  const { charLimit, frontmatterKey } = options;
+const defaultOptions: PluginOptions = {
+  charLimit: 200,
+  frontmatterKey: "preview",
+} as const;
 
-  const forbiddenTypes = new Set(["yaml", "html"]);
+function remarkTextPreview(options: PluginOptions = {}): (tree: Root) => void {
+  const {
+    charLimit = defaultOptions.charLimit as number,
+    frontmatterKey = defaultOptions.frontmatterKey as string,
+  } = options;
 
-  /**
-   * @param {Root} tree
-   * @return {undefined}
-   */
   return function (tree) {
     let previewText = "";
 
-    visit(tree, (node, index, parent) => {
+    visit(tree, "text", (node) => {
       if (previewText.length >= charLimit) return;
-      if (forbiddenTypes.has(node.type)) return;
 
       if (node.value) {
         previewText += node.value + " ";
@@ -69,9 +54,15 @@ export default function remarkTextPreview(
   };
 }
 
-function addYamlProperty(yaml, frontmatterKey, previewText) {
+function addYamlProperty(
+  yaml: string,
+  frontmatterKey: string,
+  previewText: string,
+) {
   const lines = yaml.split("\n");
   lines.push(`${frontmatterKey}: ${previewText}`);
   const newYaml = lines.join("\n");
   return newYaml;
 }
+
+export default remarkTextPreview;
