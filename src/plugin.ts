@@ -15,7 +15,7 @@ interface PluginOptions {
 
 const defaultOptions: PluginOptions = {
   charLimit: 200,
-  trailingWordBreakPolicy: "full word",
+  trailingWordBreakPolicy: "break",
   frontmatterKey: "preview",
   allowMultipleLines: false,
   appendEllipsis: true,
