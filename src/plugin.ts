@@ -33,7 +33,10 @@ function remarkTextPreview(options: PluginOptions = {}): (tree: Root) => void {
   return function (tree) {
     let previewText = extractPreviewText(tree, charLimit);
 
-    if (!allowMultipleLines) previewText = previewText.replace("\n", " ");
+    if (!allowMultipleLines) {
+      previewText = previewText.replace("\n", " ");
+      previewText = previewText.replace(/\s+/g, " ");
+    }
 
     previewText = previewText.trim();
 

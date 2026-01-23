@@ -4,10 +4,12 @@ import { visit } from "unist-util-visit";
 function extractPreviewText(tree: Root, charLimit: number) {
   let previewText = "";
 
-  visit(tree, "text", (node) => {
+  visit(tree, ["text", "code", "inlineCode"], (node) => {
     if (previewText.length >= charLimit) return;
 
+    // @ts-ignore
     if (node.value) {
+      // @ts-ignore
       previewText += node.value + " ";
     }
   });
