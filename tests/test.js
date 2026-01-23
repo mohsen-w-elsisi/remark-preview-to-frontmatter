@@ -4,10 +4,11 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { remark } from "remark";
+import { fromMarkdown as MdastFromMarkdown } from "mdast-util-from-markdown";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkTextPreview from "remark-preview-to-frontmatter";
 
-const process = async (content, options) => {
+const processMarkdoqwn = async (content, options) => {
   const file = await remark()
     .use(remarkFrontmatter)
     .use(remarkTextPreview, options)
@@ -23,12 +24,16 @@ const readFixture = async (filename) => {
 };
 
 const checkFixture = async (inputName, options, expectedName) => {
-  const input = await readFixture(inputName);
-  const expected = await readFixture(
-    expectedName || inputName.replace(/\.md$/, ".expected.md"),
-  );
-  const output = await process(input, options);
-  assert.equal(output, expected);
+  const inputMarkdown = await readFixture(inputName);
+
+  expectedName = expectedName || inputName.replace(/\.md$/, ".expected.md");
+  const expectedMarkdown = await readFixture(expectedName);
+  const expectedAST = MdastFromMarkdown(expectedMarkdown);
+
+  const outputMarkdown = await processMarkdoqwn(inputMarkdown, options);
+  const outputAST = MdastFromMarkdown(outputMarkdown);
+
+  assert.equal(JSON.stringify(outputAST), JSON.stringify(expectedAST));
 };
 
 describe("remark-preview-to-frontmatter", () => {
@@ -85,8 +90,12 @@ describe("remark-preview-to-frontmatter", () => {
   });
 
   it("preserves newlines when allowMultipleLines is true", async () => {
-    await checkFixture("multiline.md", {
-      allowMultipleLines: true,
-    }, "multiline-allowed.expected.md");
+    await checkFixture(
+      "multiline.md",
+      {
+        allowMultipleLines: true,
+      },
+      "multiline-allowed.expected.md",
+    );
   });
 });
