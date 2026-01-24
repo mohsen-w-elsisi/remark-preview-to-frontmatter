@@ -7,12 +7,12 @@ import { fromMarkdown as MdastFromMarkdown } from "mdast-util-from-markdown";
 import { frontmatterFromMarkdown } from "mdast-util-frontmatter";
 import { frontmatter as frontmatterMicromask } from "micromark-extension-frontmatter";
 import remarkFrontmatter from "remark-frontmatter";
-import remarkTextPreview from "remark-preview-to-frontmatter";
+import remarkPreviewToFrontmatter from "remark-preview-to-frontmatter";
 
 const processMdWithPlugin = async (content, options) => {
   const file = await remark()
     .use(remarkFrontmatter)
-    .use(remarkTextPreview, options)
+    .use(remarkPreviewToFrontmatter, options)
     .process(content);
   return String(file);
 };

@@ -1,3 +1,3 @@
-import remarkTextPreview from "./plugin.js";
+import remarkPreviewToFrontmatter from "./plugin.js";
 
-export default remarkTextPreview;
+export default remarkPreviewToFrontmatter;

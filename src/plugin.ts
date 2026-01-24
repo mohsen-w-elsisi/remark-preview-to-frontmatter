@@ -21,7 +21,9 @@ const defaultOptions: PluginOptions = {
   appendEllipsis: true,
 } as const;
 
-function remarkTextPreview(options: PluginOptions = {}): (tree: Root) => void {
+function remarkPreviewToFrontmatter(
+  options: PluginOptions = {},
+): (tree: Root) => void {
   const {
     charLimit = defaultOptions.charLimit as number,
     trailingWordBreakPolicy = defaultOptions.trailingWordBreakPolicy as TrailingWordBreakPolicy,
@@ -52,4 +54,4 @@ function remarkTextPreview(options: PluginOptions = {}): (tree: Root) => void {
   };
 }
 
-export default remarkTextPreview;
+export default remarkPreviewToFrontmatter;
