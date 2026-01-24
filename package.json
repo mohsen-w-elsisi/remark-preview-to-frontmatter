@@ -1,8 +1,21 @@
 {
   "name": "remark-preview-to-frontmatter",
   "version": "1.0.0",
+  "author": "Mohsen Elsisi",
+  "description": "remark plugin to add text from the beginning of a document to a property in frontmatter.",
+  "keywords": [
+    "unified",
+    "remark",
+    "remark-plugin",
+    "markdown",
+    "frontmatter"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mohsen-w-elsisi/remark-preview-to-frontmatter"
+  },
   "type": "module",
-  "description": "",
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js"
@@ -12,9 +25,6 @@
     "build": "tsc",
     "test": "npm run build && node tests/test.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "unist-builder": "^4.0.0",
     "unist-util-visit": "^5.0.0",
