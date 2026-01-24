@@ -4,12 +4,12 @@
 
 ## Contents
 
-- [[#What is this?]]
-- [[#When should I use this?]]
-- [[#Install]]
-- [[#Use]]
-- [[#API]]
-	- [[#PluginOptions]]
+- [What is this](#what-is-this?)
+- [When should I use this?](#when-should-I-use-this?)
+- [Installation](#install)
+- [usage](#use)
+- [API](#api)
+	- [PluginOptions](#pluginoptions)
 
 ## What is this?
 
@@ -19,10 +19,15 @@ This is a [unified](https://github.com/unifiedjs/unified) ([remark](https://git
 
 This plugin is useful in use cases where a preview of the document must be part of the files metadata. For example, blogging sites may use this to show a snippet of each individual blog post in a list of multiple posts. 
 
-This plugin selects the snippet based on a number of characters or words, hence for something like an abstract in a journal article, this plugin is not useful. 
+This plugin selects the snippet based on a number of characters, hence for something like an abstract in a journal article, this plugin is not useful. 
 
 ## Install
 
+The package is only available on npm:
+
+```shell
+npm install remark-preview-to-frontmatter
+```
 
 ## Use
 
